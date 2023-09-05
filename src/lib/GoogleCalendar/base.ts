@@ -1,6 +1,13 @@
-import { calendar_v3, google } from "googleapis";
+import { google } from "googleapis";
 
-export async function GoogleCalenderCreate(accessToken: string, refreshToken: string) {
+/**
+ * Google Calendar API のオブジェクトを生成する。
+ *
+ * @param {string} accessToken Google API のアクセストークン
+ * @param {string} refreshToken Google API のリフレッシュトークン
+ * @returns Google Calendar API のオブジェクト
+ */
+export function GoogleCalender(accessToken: string, refreshToken: string) {
     // Google OAuthへの接続
     const oauth2Client = new google.auth.OAuth2({
         clientId: process.env.GOOGLE_CLIENT_ID,
@@ -15,11 +22,8 @@ export async function GoogleCalenderCreate(accessToken: string, refreshToken: st
         scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly",
     });
 
-    // Googleカレンダーの一覧を取得する
+    // カレンターオブジェクト生成
     const calendar = google.calendar({ version: "v3", auth: oauth2Client });
-    const calendarResponse = await calendar.calendarList.list();
 
-    // writeFileSync("./calendar2.json", JSON.stringify(calendarResponse));
-
-    return calendarResponse;
+    return calendar;
 }
