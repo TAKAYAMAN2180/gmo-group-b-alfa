@@ -1,7 +1,11 @@
-# Awesome Project Build with TypeORM
+# TypeORM
 
-Steps to run this project:
+## マイグレーションファイルの生成
+```
+npm run typeorm migration:generate -- --dataSource src/data-source.ts --pretty src/migration/InitialSchema
+```
 
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+## マイグレーション実行
+```
+npm run typeorm migration:run -- --dataSource src/data-source.ts 
+```
