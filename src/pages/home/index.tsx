@@ -1,3 +1,5 @@
+import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 type Task = {
@@ -36,7 +38,7 @@ type Task = {
 // }
 
 export default function Page() {
-  const [tasks, setTasks] = useState([
+  const [tasks, setTasks] = useState<Task[]>([
     {
       "id": 1,
       "name": "モダンフロント勉強会",
@@ -63,12 +65,10 @@ export default function Page() {
     }
   ]);
   useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await fetch("/api/tasks");
-      const data = await response.json();
-      setTasks(data.tasks)
-    };
-    fetchTasks();
+    axios.get("/api/tasks")
+      .then((res) => res.data)
+      .then((data) => setTasks(data.tasks))
+      .catch((err) => null);
   }, [])
   return (
     <>
@@ -79,13 +79,13 @@ export default function Page() {
             <div className="pb-3">
               <h1 className="border-primary border-start border-3 ps-3">イベント一覧</h1>
             </div>
-            <a className="btn btn-warning rounded-pill mt-5" href="/event/new">＋イベントの作成</a>
+            <Link className="btn btn-warning rounded-pill mt-5" href="/event/new">＋イベントの作成</Link>
           </div>
         </div>
         <div className="row justify-content-around">
           <div className="row gy-2 col-9">
-            {tasks.map((task: any) =>
-              <div className="btn btn-outline-primary d-flex justify-content-around">
+            {tasks.map((task: Task, index: number) =>
+              <div key={index} className="btn btn-outline-primary d-flex justify-content-around">
                 <div className="col-9">
                   <h1>{task.name}</h1>
                   <h2>{task.date}</h2>
