@@ -152,7 +152,10 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="d-flex justify-content-around">
-                        <button className="btn btn-primary btn-lg col-9 mt-4" type="submit">作成</button>
+                        <button className="btn btn-primary btn-lg col-9 mt-4" type="submit" onClick={() => {
+                            setIsChecking(true)
+                        }}>作成
+                        </button>
                     </div>
                 </div>
             </form>
