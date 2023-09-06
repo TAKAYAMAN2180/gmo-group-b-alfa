@@ -6,16 +6,17 @@ import React, { useEffect, useState } from "react";
  */
 export interface Profile {
   name: string;
+  email: string;
   department: string;
-  abilities: Ability[];
+  technologies: Technology[];
 }
 
 /**
  * 保有技術
  */
-export interface Ability {
+export interface Technology {
   name: string;
-  age: string;
+  // age: string;
 }
 
 /**
@@ -27,10 +28,10 @@ export default function Page() {
   const router = useRouter();
   const [inputValue, setInputValue] = useState<Profile>({
     name: "",
+    email: "",
     department: "",
-    abilities: [{
+    technologies: [{
       name: "",
-      age: ""
     }]
   });
 
@@ -60,16 +61,26 @@ export default function Page() {
     });
   }
 
+    /**
+   * @param e メールアドレス入力欄の変更イベント
+   */
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue({
+      ...inputValue,
+      email: e.target.value
+    });
+  }
+
   /**
    * @param e 保有技術入力欄の変更イベント
    * @param index 保有技術のindex
    * @param attribute 保有技術の属性
    */
-  const handleAbilitiesChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, attribute: string) => {
+  const handletechnologiesChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, attribute: string) => {
     const newInputValue = { ...inputValue };
-    newInputValue.abilities[index] = {
-      name: attribute === "name" ? e.target.value : inputValue.abilities[index].name,
-      age: attribute === "age" ? e.target.value : inputValue.abilities[index].age
+    newInputValue.technologies[index] = {
+      name: attribute === "name" ? e.target.value : inputValue.technologies[index].name,
+      // age: attribute === "age" ? e.target.value : inputValue.technologies[index].age
     }
     setInputValue(newInputValue);
   };
@@ -77,15 +88,15 @@ export default function Page() {
   /**
    * 保有技術の追加
    */
-  const handleAddAbility = () => {
+  const handleAddTechnology = () => {
     // 入力がない場合は追加しない
-    if (inputValue.abilities[inputValue.abilities.length - 1].name === "") return;
-    if (inputValue.abilities[inputValue.abilities.length - 1].age === "") return;
+    if (inputValue.technologies[inputValue.technologies.length - 1].name === "") return;
+    // if (inputValue.technologies[inputValue.technologies.length - 1].age === "") return;
 
     const newInputValue = { ...inputValue };
-    newInputValue.abilities.push({
+    newInputValue.technologies.push({
       name: "",
-      age: ""
+      // age: ""
     });
     setInputValue(newInputValue);
   }
@@ -93,11 +104,11 @@ export default function Page() {
   /**
    * @param index 削除する保有技術のindex
    */
-  const handleDeleteAbility = (index: number) => {
+  const handleDeleteTechnology = (index: number) => {
     // 技術が1つしかない場合は削除しない
-    if (inputValue.abilities.length === 1) return;
+    if (inputValue.technologies.length === 1) return;
     const newInputValue = { ...inputValue };
-    newInputValue.abilities.splice(index, 1);
+    newInputValue.technologies.splice(index, 1);
     setInputValue(newInputValue);
   }
 
@@ -108,7 +119,7 @@ export default function Page() {
     // 入力がない場合は更新しない
     if (inputValue.name === "") return;
     if (inputValue.department === "") return;
-    if (inputValue.abilities.some((ability) => ability.name === "" || ability.age === "")) return;
+    if (inputValue.technologies.some((ability) => ability.name === "")) return;
 
     sessionStorage.setItem("profile", JSON.stringify(inputValue));
     router.push("/profile/confirm");
@@ -121,19 +132,21 @@ export default function Page() {
       <div>
         <label>お名前：<input type="text" value={inputValue.name} onChange={(e) => handleNameChange(e)} /></label>
         <br />
+        <label>メールアドレス：<input type="email" value={inputValue.email} onChange={(e) => handleEmailChange(e)} /></label>
+        <br />
         <label>部署：<input type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} /></label>
         <br />
         <label>
           保有技術：<br />
-          {inputValue.abilities.map((ability, index) => (
+          {inputValue.technologies.map((ability, index) => (
             <div key={index}>
-              <label>技術：<input type="text" value={ability.name} onChange={(e) => handleAbilitiesChange(e, index, "name")} /></label>
-              <label>年数：<input type="text" value={ability.age} onChange={(e) => handleAbilitiesChange(e, index, "age")} /></label>
-              <button onClick={() => handleDeleteAbility(index)}>削除</button>
+              <label>技術：<input type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} /></label>
+              {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
+              <button onClick={() => handleDeleteTechnology(index)}>削除</button>
             </div>
           )
           )}
-          <button onClick={() => handleAddAbility()}>追加</button>
+          <button onClick={() => handleAddTechnology()}>追加</button>
         </label>
         <br />
         <label><button onClick={() => submit()}>更新</button></label>
