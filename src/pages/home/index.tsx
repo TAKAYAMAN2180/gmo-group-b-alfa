@@ -83,18 +83,18 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await fetch("/api/tasks");
-      const data = await response.json();
-      setTasks(data)
-      tasks.map(async (task: Task) => {
-        const response = await fetch(`/api/event/${task.id}`);
-        const data = await response.json();
-        setReserveNum(data);
-      });
-    };
-    fetchTasks();
-  }, []);
+    axios.get("/api/tasks")
+      .then((res) => res.data)
+      .then((data) => setTasks(data))
+      .catch((e) => null);
+
+    tasks.map(async (task: Task) => {
+      axios.get(`/api/event/${task.id}`)
+        .then((res) => res.data)
+        .then((data) => setReserveNum(data))
+        .catch((e) => null);
+    });
+  }, [tasks]);
 
   const details = async (id: number) => {
     router.push(`/event/${id}`);
