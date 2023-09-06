@@ -43,7 +43,7 @@ export default function Page() {
       "date": "9月11日 17時～",
       "maxNumber": 20,
       "number": 20,
-      "location": "オンライン", 
+      "location": "オンライン",
     },
     {
       "id": 2,
@@ -51,7 +51,15 @@ export default function Page() {
       "date": "9月13日",
       "maxNumber": 25,
       "number": 10,
-      "location": "GMOオフィス", 
+      "location": "GMOオフィス",
+    },
+    {
+      "id": 3,
+      "name": "Vue.js勉強会",
+      "date": "9月15日",
+      "maxNumber": 10,
+      "number": 6,
+      "location": "オンライン",
     }
   ]);
   useEffect(() => {
@@ -63,22 +71,43 @@ export default function Page() {
     fetchTasks();
   }, [])
   return (
-  <>
-  <p>username</p>
-  <a href="/event/new">イベントの作成</a>
-  <div>
-    {tasks.map((task: any) => 
-    <div>
-      <h1>{task.name}</h1>
-      <h2>{task.date}</h2>
-      <p>参加者 {task.number}/{task.maxNumber}人</p>
-      <p>場所  {task.location}</p>
-    </div>
-    )}
-  </div>
-  <div>
-    <h3>フィルター</h3>
-  </div>
-  </>
-  ) 
+    <>
+      <div className="m-4 pe-4 container-fluid">
+        <div className="">
+          <p>usernameさん</p>
+          <div className="col-9 d-flex justify-content-between">
+            <div className="pb-3">
+              <h1 className="border-primary border-start border-3 ps-3">イベント一覧</h1>
+            </div>
+            <a className="btn btn-warning rounded-pill mt-5" href="/event/new">＋イベントの作成</a>
+          </div>
+        </div>
+        <div className="row justify-content-around">
+          <div className="row gy-2 col-9">
+            {tasks.map((task: any) =>
+              <div className="btn btn-outline-primary d-flex justify-content-around">
+                <div className="col-9">
+                  <h1>{task.name}</h1>
+                  <h2>{task.date}</h2>
+                </div>
+                <div className="col-3 border-primary border-start pt-3">
+                  <h5>参加者 {task.number}/{task.maxNumber}人</h5>
+                  <h5>場所  {task.location}</h5>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="row gy-2 col-3">
+            <div className="border border-secondary rounded">
+              <h3 className="border-bottom border-secondary p-3">フィルター</h3>
+              <div className="m-2">
+                <p>#フロントエンド</p>
+                <p>#バックエンド</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }
