@@ -2,6 +2,9 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import { Technology } from "../entity/Technology"
+import { REPLCommand } from "repl"
+import { createQueryBuilder } from "typeorm"
+import App from "next/app"
 
 export class UserController {
 
@@ -9,78 +12,57 @@ export class UserController {
     private technologyRepository = AppDataSource.getRepository(Technology)
 
     async getProfile(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
+        const user_id = parseInt(request.params.id)
 
-        const user = await this.userRepository.findOne({
-            where: { id }
+        const user = this.userRepository.findOneBy({
+            id: user_id
         })
+        if(!user) {
+            return "not found"
+        }
 
         return user
     }
 
     async createUser(request: Request, response: Response, next: NextFunction) {
-        const {name, email, department, ...technology_ids} = request.params
-
-        if (!name || !email || !department || technology_ids.empty?) {
+        const {name, email, department, technologies} = request.body
+        if (!name || !email || !department || technologies.length === 0) {
             return JSON.stringify({message: "lack data"})
         }
 
-        let technologies = []
-        technology_ids.forEach((technology_id) => {
-            const technology = await this.technologyRepository.findOne({
-                where: { technology_id }
+        let technologyList = []
+        technologies.forEach((technology_id) => {
+            const technology = this.technologyRepository.findOneBy({
+                id: technology_id
             })
-            technologies = [...technologies, technology]
+            technologyList.push(technology)
         })
-
-        const user = Object.assign(new User(), {
-                        name,
-                        email,
-                        department
-                    })
         
-        return this.userRepository.save(user)
+        const user = new User()
+        user.name = name
+        user.email = email
+        user.department = department
+        user.can_use = technologyList
+        
+        return AppDataSource.manager.save(user)
     }
     
+    async updateProfile(request: Request, response: Response, next: NextFunction) {
+        const user_id = parseInt(request.params.id)
+        const {name, email, department, technologies} = request.params
+        if (!name || !email || !department || technologies.length === 0) {
+            return JSON.stringify({message: "lack data"})
+        }
 
-    // async one(request: Request, response: Response, next: NextFunction) {
-    //     const id = parseInt(request.params.id)
-
-
-    //     const user = await this.userRepository.findOne({
-    //         where: { id }
-    //     })
-
-    //     if (!user) {
-    //         return "unregistered user"
-    //     }
-    //     return user
-    // }
-
-    // async save(request: Request, response: Response, next: NextFunction) {
-    //     const { firstName, lastName, age } = request.body;
-
-    //     const user = Object.assign(new User(), {
-    //         firstName,
-    //         lastName,
-    //         age
-    //     })
-
-    //     return this.userRepository.save(user)
-    // }
-
-    // async remove(request: Request, response: Response, next: NextFunction) {
-    //     const id = parseInt(request.params.id)
-
-    //     let userToRemove = await this.userRepository.findOneBy({ id })
-
-    //     if (!userToRemove) {
-    //         return "this user not exist"
-    //     }
-
-    //     await this.userRepository.remove(userToRemove)
-
-    //     return "user has been removed"
-    // }
-
+        return await AppDataSource
+            .createQueryBuilder()
+            .update(User)
+            .set({ 
+                name: name, 
+                email: email,
+                department: department
+            })
+            .where("id = :id", { id: user_id })
+            .execute()
+    }
 }
