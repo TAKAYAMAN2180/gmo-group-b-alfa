@@ -32,6 +32,13 @@ type Num = {
   "num": number,
 };
 
+type Technology = {
+  "id": number,
+  "name": string,
+  "created_at": string,
+  "edited_at": string,
+};
+
 export default function Page() {
   const [tasks, setTasks] = useState<Task[]>([
     {
@@ -79,6 +86,21 @@ export default function Page() {
     {
       "num": 15,
     }]);
+    
+  const [tech, setTech] = useState<Technology[]>([
+    {
+      "id": 1,
+      "name": "フロントエンド",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
+    {
+      "id": 2,
+      "name": "バックエンド",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    }
+  ]);
 
   const router = useRouter();
 
@@ -87,6 +109,11 @@ export default function Page() {
       .then((res) => res.data)
       .then((data) => setTasks(data))
       .catch((e) => null);
+
+    axios.get("/api/technologies")
+      .then((res) => res.data)
+      .then((data) => setTech(data))
+      .catch((e)=> null);
 
     tasks.map(async (task: Task) => {
       axios.get(`/api/event/${task.id}`)
@@ -130,8 +157,9 @@ export default function Page() {
             <div className="border border-secondary rounded">
               <h3 className="border-bottom border-secondary p-3">フィルター</h3>
               <div className="m-2">
-                <p>#フロントエンド</p>
-                <p>#バックエンド</p>
+                {tech.map((tech: any) =>
+                  <p key={tech.id}># {tech.name}</p>
+                )}
               </div>
             </div>
           </div>
