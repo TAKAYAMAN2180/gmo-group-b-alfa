@@ -5,12 +5,10 @@ import "../../public/bootstrap/css/bootstrap.min.css";
 
 function MyApp({Component, pageProps}: AppProps) {
     return (
-        <>
-            <Header />
-            <SessionProvider session={pageProps.session}>
+        <SessionProvider session={pageProps.session}>
+            <Header/>
             <Component {...pageProps} />
-            </SessionProvider>
-        </>
+        </SessionProvider>
     )
 }
 
