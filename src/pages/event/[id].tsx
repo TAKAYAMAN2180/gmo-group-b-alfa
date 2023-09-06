@@ -82,38 +82,38 @@ export default function Page() {
           <h1 className="border-primary border-start border-3 ps-3">イベント詳細確認</h1>
         </div>
         <div className="border border-secondary rounded p-4">
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">日付</h3>
-            <h3 className="col-6">{event.start_time}</h3>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">イベント名</h3>
-            <h3 className="col-6">{event.name}</h3>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">ジャンル</h3>
-            <div className="col-6 mb-2">
-              {event.technologies.map((tech, index) => (
-                <p className="mb-0" key={index}>{tech}</p>
-              ))}
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5 ">日付</h3>
+              <h3 className="col-6">{event.start_time}</h3>
             </div>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">主催者</h3>
-            <h3 className="col-6">{event.create_user}</h3>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">場所</h3>
-            <h3 className="col-6">{event.location}</h3>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">最大人数</h3>
-            <h3 className="col-6">{event.limitation}</h3>
-          </div>
-          <div className="row d-flex justify-content-around">
-            <h3 className="col-3">参加予定人数</h3>
-            <h3 className="col-6">{reserveNum.num}</h3>
-          </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">イベント名</h3>
+              <h3 className="col-6">{event.name}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">ジャンル</h3>
+              <div className="col-6 mb-2">
+                {event.technologies.map((tech, index) => (
+                  <p className="mb-0" key={index}>{tech}</p>
+                ))}
+              </div>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">主催者</h3>
+              <h3 className="col-6">{event.create_user}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">場所</h3>
+              <h3 className="col-6">{event.location}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">定員</h3>
+              <h3 className="col-6">{event.limitation}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">参加予定人数</h3>
+              <h3 className="col-6">{reserveNum.num}</h3>
+            </div>
           <div className="d-flex justify-content-around">
             <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>イベントに参加</button>
           </div>

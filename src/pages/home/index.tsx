@@ -142,11 +142,11 @@ export default function Page() {
           <div className="row gy-2 col-9">
             {tasks.map((task: any, index: number) =>
               <div key={index} className="btn btn-outline-primary d-flex justify-content-around" onClick={() => details(task.id)}>
-                <div className="col-9">
+                <div className="col-9 pe-2">
                   <h1>{task.name}</h1>
                   <h2>{task.start_time}</h2>
                 </div>
-                <div className="col-3 border-primary border-start pt-3">
+                <div className="col-3 border-primary border-start pt-3  ps-2">
                   <h5>参加者 {reserveNum[index].num}/{task.limitation}人</h5>
                   <h5>場所  {task.location}</h5>
                 </div>
@@ -158,7 +158,7 @@ export default function Page() {
               <h3 className="border-bottom border-secondary p-3">フィルター</h3>
               <div className="m-2">
                 {tech.map((tech: any) =>
-                  <p key={tech.id}># {tech.name}</p>
+                  <p className="mb-1" key={tech.id}>{tech.name}</p>
                 )}
               </div>
             </div>
