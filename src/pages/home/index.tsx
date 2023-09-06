@@ -72,7 +72,7 @@ export default function Page() {
   }, [])
   return (
     <>
-      <div className="m-4 pe-4 container-fluid">
+      <div className=".container mt-4 p-4 container-fluid">
         <div className="">
           <p>usernameさん</p>
           <div className="col-9 d-flex justify-content-between">
