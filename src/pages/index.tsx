@@ -15,7 +15,7 @@ const Login: NextPage = () => {
     const { data: session } = useSession();
 
     return (
-        <>
+        <div>
             {
                 // セッションがある場合、ログアウトを表示
                 session && (
@@ -35,7 +35,7 @@ const Login: NextPage = () => {
                     </div>
                 )
             }
-        </>
+        </div>
     );
 };
 

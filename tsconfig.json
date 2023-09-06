@@ -12,6 +12,7 @@
     "outDir": "./build",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -23,12 +24,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "moduleResolution": "bundler"
-  },
-  "paths": {
-    "@/*": [
-      "./src/*"
-    ]
   },
   "include": [
     "next-env.d.ts",
