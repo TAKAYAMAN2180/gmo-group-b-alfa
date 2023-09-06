@@ -61,9 +61,9 @@ export default function Page() {
     });
   }
 
-    /**
-   * @param e メールアドレス入力欄の変更イベント
-   */
+  /**
+ * @param e メールアドレス入力欄の変更イベント
+ */
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue({
       ...inputValue,
@@ -126,31 +126,54 @@ export default function Page() {
   }
 
   return (
-    <div>
-      <h1>プロフィール</h1>
+    <>
+      <div className=".container mt-4 container-fluid">
+        <div className="pb-4">
+          <h1 className="border-primary border-start border-3 ps-3">プロフィール</h1>
+        </div>
 
-      <div>
-        <label>お名前：<input type="text" value={inputValue.name} onChange={(e) => handleNameChange(e)} /></label>
-        <br />
-        <label>メールアドレス：<input type="email" value={inputValue.email} onChange={(e) => handleEmailChange(e)} /></label>
-        <br />
-        <label>部署：<input type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} /></label>
-        <br />
-        <label>
-          保有技術：<br />
-          {inputValue.technologies.map((ability, index) => (
-            <div key={index}>
-              <label>技術：<input type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} /></label>
-              {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
-              <button onClick={() => handleDeleteTechnology(index)}>削除</button>
+        <div>
+          <label className="form-label d-flex justify-content-around px-3">
+            <p className="col-3">お名前</p>
+            <input className="form-control" type="text" value={inputValue.name} onChange={(e) => handleNameChange(e)} />
+          </label>
+
+          <label className="form-label d-flex justify-content-around px-3">
+            <p className="col-3">メールアドレス</p>
+            <input className="form-control" type="email" value={inputValue.email} onChange={(e) => handleEmailChange(e)} />
+          </label>
+          <br />
+
+          <label className="form-label d-flex justify-content-around px-3">
+            <p className="col-3">部署</p>
+            <input className="form-control" type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} />
+          </label>
+
+          <label className="form-label d-flex justify-content-around px-3">
+            <p className="col-3">保有技術</p>
+            <div className="col-9 justify-content-around">
+              {inputValue.technologies.map((ability, index) => (
+                <div key={index}>
+                  <label className="form-label d-flex justify-content-around mb-2">
+                    <input className="form-control me-1" type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} />
+
+                    {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
+                    <button className="col-3 btn btn-secondary" onClick={() => handleDeleteTechnology(index)}>削除</button>
+                  </label>
+                </div>
+              )
+              )}
+              <button className="col-12 btn btn-warning rounded-pill" onClick={() => handleAddTechnology()}>＋追加</button>
             </div>
-          )
-          )}
-          <button onClick={() => handleAddTechnology()}>追加</button>
-        </label>
-        <br />
-        <label><button onClick={() => submit()}>更新</button></label>
+          </label>
+          <br />
+          <label className="mb-3 d-flex justify-content-between">
+          <div className="mt-4">
+            <a href="/home" className="btn btn-outline-secondary">＜戻る</a>
+          </div>
+          <button  className="btn btn-primary col-10 mt-4" onClick={() => submit()}>更新</button></label>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
