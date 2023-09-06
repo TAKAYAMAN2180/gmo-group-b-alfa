@@ -13,7 +13,7 @@ export default function Page() {
                     <div className={"fs-3 border-primary border-start border-3 ps-3"}>ログイン</div>
                     <div className={"w-100 mt-5"}>下のボタンを押してGoogleアカウントにログインしてください</div>
                     {!session &&
-                        (<div className={"w-50 mx-auto"}>
+                        (<div className={"w-25 mx-auto"}>
                             <img className={"img-fluid"} src={"./btn_google_signin_dark_normal_web@2x.png"}
                                  onClick={() => signIn("google")}/>
                         </div>)}
