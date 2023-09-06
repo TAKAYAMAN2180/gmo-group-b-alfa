@@ -82,6 +82,12 @@ export default function Page() {
     setFormData({ ...formData, technologies: [...formData.technologies, ""] });
   }
 
+  const removeTags = (index: number) => {
+    const newFormData = {...formData };
+    newFormData.technologies.splice(index, 1);
+    setFormData(newFormData);
+  }
+
   return (
     <form onSubmit={submitEventInfo}>
       <div className=".container mt-4 container-fluid">
@@ -91,9 +97,11 @@ export default function Page() {
         </div>
         <div className="border-2 border-top">
           {formData.technologies.map((tech, index) => (
-            <div key={index} className="d-flex justify-content-around my-3">
-              <label className="col-3 ps-3">技術ラベル{index + 1}</label>
-              <input className="col-9" type="text" name={`technologies[${index}]`} value={tech} onChange={(e) => handleTechChange(e, index)} required />
+            <div key={index} className="d-flex justify-content-around m-2">
+              <label className="col-3 ps-2">技術ラベル{index + 1}</label>
+              <input className="col-5" type="text" name={`technologies[${index}]`} value={tech} onChange={(e) => handleTechChange(e, index)} required />
+              <div className="col-1"></div>
+              <button className="col-3 btn btn-secondary rounded-pill" type="button" onClick={() => removeTags(index)}>タグの削除</button>
             </div>
           ))}
           <div className="d-flex justify-content-around mb-3">
