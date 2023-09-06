@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
 type Event = {
-    "create_user": string,
-    "name": string,
-    "technologies": string[],
-    "start_time": string,
-    "end_time": string,
-    "location": string,
-    "description": string,
-    "limitation": number,
-    "record_url": string,
+  "create_user": string,
+  "name": string,
+  "technologies": string[],
+  "start_time": string,
+  "end_time": string,
+  "location": string,
+  "description": string,
+  "limitation": number,
+  "record_url": string,
 }
 
 export default function Page() {
@@ -38,7 +38,7 @@ export default function Page() {
   //   "limitation": 0,
   //   "record_url": "",
   // });
-  
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value })
@@ -47,13 +47,14 @@ export default function Page() {
   const handleTechChange = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const newTech = [...formData.technologies]
     newTech[index] = e.target.value;
-    setFormData({ ...formData, technologies: newTech})
+    setFormData({ ...formData, technologies: newTech })
   };
- 
+
   const submitEventInfo = async (e: any) => {
     e.preventDefault();
-    
-    const updatedForm = {...formData,
+
+    const updatedForm = {
+      ...formData,
       "create_user": "Taro",
     };
     setFormData(updatedForm);
@@ -65,64 +66,69 @@ export default function Page() {
         },
         body: JSON.stringify(formData),
       });
-      
+
       if (response.ok) {
         console.log("form data is submitted.");
       } else {
         console.log("form data is not submitted")
         console.log(formData);
-      } 
+      }
     } catch (error) {
       console.error("Error", error);
     }
   };
-  
+
   const addTags = async () => {
-    setFormData({...formData, technologies: [...formData.technologies, ""]});
+    setFormData({ ...formData, technologies: [...formData.technologies, ""] });
   }
 
   return (
     <form onSubmit={submitEventInfo}>
-      <div>
-        <div>
-        <label>イベント名</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} required/>
+      <div className="m-4 pe-4 container-fluid">
+        <div className="d-flex justify-content-around mb-3">
+          <label className="col-3 ps-3">イベント名</label>
+          <input className="col-9" type="text" name="name" value={formData.name} onChange={handleChange} required />
         </div>
-        <div>
-        {formData.technologies.map((tech, index) => (
-          <div key={index}>
-            <label>技術ラベル{index + 1}</label>
-            <input type="text" name={`technologies[${index}]`} value={tech} onChange={(e) => handleTechChange(e, index)} required/>
+        <div className="border-2 border-top">
+          {formData.technologies.map((tech, index) => (
+            <div key={index} className="d-flex justify-content-around my-3">
+              <label className="col-3 ps-3">技術ラベル{index + 1}</label>
+              <input className="col-9" type="text" name={`technologies[${index}]`} value={tech} onChange={(e) => handleTechChange(e, index)} required />
+            </div>
+          ))}
+          <div className="d-flex justify-content-around mb-3">
+            <div className="col-3"></div>
+            <button className="col-9 btn btn-warning rounded-pill" type="button" onClick={addTags}>＋新しいタグの追加</button>
           </div>
-        ))}
-        <button type="button" onClick={addTags}>新しいタグの追加</button>
         </div>
-        <div>
-        <label>開始時刻</label>
-        <input type="datetime-local" name="start_time" value={formData.start_time} onChange={handleChange} required/>
+        <div className=" border-2 border-top">
+          <div className="d-flex justify-content-around my-3">
+            <label className="col-3 ps-3">開始時刻</label>
+            <input className="col-9" type="datetime-local" name="start_time" value={formData.start_time} onChange={handleChange} required />
+          </div>
+          <div className="d-flex justify-content-around mb-3">
+            <label className="col-3 ps-3">終了時刻</label>
+            <input className="col-9" type="datetime-local" name="end_time" value={formData.end_time} onChange={handleChange} required />
+          </div>
+          <div className="d-flex justify-content-around mb-3">
+            <label className="col-3 ps-3">場所</label>
+            <input className="col-9" type="text" name="location" value={formData.location} onChange={handleChange} required />
+          </div>
+          <div className="d-flex justify-content-around mb-3">
+            <label className="col-3 ps-3">参加可能人数</label>
+            <input className="col-9" type="number" name="limitation" value={formData.limitation} onChange={handleChange} required />
+          </div>
+          <div className="d-flex justify-content-around mb-3">
+            <label className="col-3 ps-3">イベントの説明</label>
+            <textarea className="col-9" name="description" value={formData.description} cols={40} rows={5} onChange={handleChange} required></textarea>
+          </div>
+          <div className="d-flex justify-content-around mb-3">
+            <label className="col-3 ps-3">record_url</label>
+            <input className="col-9" type="text" name="record_url" value={formData.record_url} onChange={handleChange} required />
+          </div>
         </div>
-        <div>
-        <label>終了時刻</label>
-        <input type="datetime-local" name="end_time" value={formData.end_time} onChange={handleChange} required/>
-        </div>
-        <div>
-        <label>場所</label>
-        <input type="text" name="location" value={formData.location} onChange={handleChange} required/>
-        </div>
-        <div>
-        <label>イベントの説明</label>
-        <textarea name="description" value={formData.description} cols={40} rows={5} onChange={handleChange} required></textarea>
-        </div>
-        <div>
-        <label>参加可能人数</label>
-        <input type="number" name="limitation" value={formData.limitation} onChange={handleChange} required/>
-        </div>
-        <div>
-        <label>record_url</label>
-        <input type="text" name="record_url" value={formData.record_url} onChange={handleChange} required/>
-        </div>
-        <div>
-        <button type="submit">送信</button>
+        <div className="d-flex justify-content-around">
+          <button className="btn btn-primary btn-lg col-9 mt-4" type="submit">作成</button>
         </div>
       </div>
     </form>
