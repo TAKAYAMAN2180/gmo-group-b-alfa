@@ -24,6 +24,6 @@ RUN \
 
 USER node
 
-COPY package*.json /app/
+COPY ./backend/package*.json /backend/
 
-CMD ["/bin/bash", "-c", "npm install && npm run dev"]
+CMD ["/bin/bash", "-c", "npm install && npm start"]

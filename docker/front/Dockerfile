@@ -24,6 +24,6 @@ RUN \
 
 USER node
 
-COPY package*.json /app/
+COPY ./front/package*.json /front/
 
 CMD ["/bin/bash", "-c", "npm install && npm run dev"]
