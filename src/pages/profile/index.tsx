@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
 /**
  * 以下のようなプロフィールを作成する
  */
-interface Profile {
+export interface Profile {
   name: string;
   department: string;
   abilities: Ability[];
@@ -12,7 +13,7 @@ interface Profile {
 /**
  * 保有技術
  */
-interface Ability {
+export interface Ability {
   name: string;
   age: string;
 }
@@ -23,6 +24,7 @@ interface Ability {
  * @returns 
  */
 export default function Page() {
+  const router = useRouter();
   const [inputValue, setInputValue] = useState<Profile>({
     name: "",
     department: "",
@@ -31,6 +33,12 @@ export default function Page() {
       age: ""
     }]
   });
+
+  // セッション内にプロフィールがあれば取得する
+  useEffect(() => {
+    const item = sessionStorage.getItem("profile");
+    if (item) setInputValue(JSON.parse(item));
+  }, [])
 
   /**
    * @param e 名前入力欄の変更イベント 
@@ -70,6 +78,10 @@ export default function Page() {
    * 保有技術の追加
    */
   const handleAddAbility = () => {
+    // 入力がない場合は追加しない
+    if (inputValue.abilities[inputValue.abilities.length - 1].name === "") return;
+    if (inputValue.abilities[inputValue.abilities.length - 1].age === "") return;
+
     const newInputValue = { ...inputValue };
     newInputValue.abilities.push({
       name: "",
@@ -82,6 +94,8 @@ export default function Page() {
    * @param index 削除する保有技術のindex
    */
   const handleDeleteAbility = (index: number) => {
+    // 技術が1つしかない場合は削除しない
+    if (inputValue.abilities.length === 1) return;
     const newInputValue = { ...inputValue };
     newInputValue.abilities.splice(index, 1);
     setInputValue(newInputValue);
@@ -91,7 +105,13 @@ export default function Page() {
    * 更新ボタン押下時の処理
    */
   const submit = () => {
-    console.log(inputValue);
+    // 入力がない場合は更新しない
+    if (inputValue.name === "") return;
+    if (inputValue.department === "") return;
+    if (inputValue.abilities.some((ability) => ability.name === "" || ability.age === "")) return;
+
+    sessionStorage.setItem("profile", JSON.stringify(inputValue));
+    router.push("/profile/confirm");
   }
 
   return (
@@ -99,9 +119,9 @@ export default function Page() {
       <h1>プロフィール</h1>
 
       <div>
-        <label>お名前：<input type="text" onChange={(e) => handleNameChange(e)} /></label>
+        <label>お名前：<input type="text" value={inputValue.name} onChange={(e) => handleNameChange(e)} /></label>
         <br />
-        <label>部署：<input type="text" onChange={(e) => handleDepartmentChange(e)} /></label>
+        <label>部署：<input type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} /></label>
         <br />
         <label>
           保有技術：<br />
