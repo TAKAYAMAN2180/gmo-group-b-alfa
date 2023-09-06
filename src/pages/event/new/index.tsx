@@ -84,7 +84,7 @@ export default function Page() {
 
   return (
     <form onSubmit={submitEventInfo}>
-      <div className="m-4 pe-4 container-fluid">
+      <div className=".container mt-4 container-fluid">
         <div className="d-flex justify-content-around mb-3">
           <label className="col-3 ps-3">イベント名</label>
           <input className="col-9" type="text" name="name" value={formData.name} onChange={handleChange} required />
