@@ -249,17 +249,20 @@ export default function Page() {
               </div>
             })}
           </div>
-          <div className="row gy-2 col-3">
-            <div className="border border-secondary rounded">
-              <h3 className="border-bottom border-secondary p-3">フィルター</h3>
+          <div className="row gy-2 col-3 h-100">
+            <p className=" bg-secondary text-white rounded-top p-0 m-0 text-center">フィルター機能</p>
+            <div className="border border-secondary rounded-bottom mt-0">
               <div className="m-2">
-                <input className="mb-1 border border-info rounded w-75" type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />
+                <input className="form-control" type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />
+                <div className="border-bottom border-secondary pb-2"></div>
+                <div className="pt-2"></div>
                 {tech.map((tech: any) => {
                   if (tech.name.indexOf(inputTech) === -1) return null
                   return (
-                    <div className="d-flex btn btn-outline-info w-75 rounded" key={tech.id}>
-                      {/* <label><input id={tech.name} className="form-check-input" type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} /> {tech.name}</label> */}
-                      <label><input id={tech.name} className="form-check-input" type="checkbox" onChange={() => handleTechCheck2()} /> {tech.name}</label>
+                    <div className="form-check" key={tech.id}>
+                      <label className="form-check-label">
+                        <input id={tech.name} className="form-check-input" type="checkbox" onChange={() => handleTechCheck2()} /> {tech.name}
+                      </label>
                     </div>
                   )
                 }

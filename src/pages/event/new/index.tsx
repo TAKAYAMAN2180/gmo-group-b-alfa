@@ -130,15 +130,17 @@ export default function Page() {
             </div>
           </div>
           <div className=" border-2 border-top">
-            <div className="d-flex justify-content-around my-3">
-              <label className="col-3 ps-3">開始時刻</label>
-              <input className="col-9" type="datetime-local" name="start_time" value={formData.start_time}
+            <div className="">
+              <label className="d-flex justify-content-around my-3">
+                <p className="col-3 ps-3">開始時刻</p>
+                <input className="form-control" type="datetime-local" name="start_time" value={formData.start_time}
                 onChange={handleChange} required />
+              </label>
             </div>
             <div className="">
               <label className="d-flex justify-content-around mb-3">
                 <p className="col-3 ps-3">終了時刻</p>
-                <input className="col-9" type="datetime-local" name="end_time" value={formData.end_time}
+                <input className="form-control" type="datetime-local" name="end_time" value={formData.end_time}
                   onChange={handleChange} required />
               </label>
 
