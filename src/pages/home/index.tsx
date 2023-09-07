@@ -1,4 +1,6 @@
+import { isset } from "@/utils/isType";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -39,68 +41,76 @@ type Technology = {
   "edited_at": string,
 };
 
+const dummyTasks: Task[] = [
+  {
+    "id": 1,
+    "create_user_id": 1,
+    "name": "モダンフロント勉強会",
+    "technologies": [
+      "フロントエンド",
+      "Vue.js",
+      "React.js",
+    ],
+    "start_time": "2022-02-02 15:00:00",
+    "end_time": "2022-02-02 17:00:00",
+    "location": "オンライン",
+    "description": "これは説明です",
+    "limitation": 10,
+    "record_url": "hoge.google.com?hogehogehoge",
+    "created_at": "2022-02-01 10:00:00",
+    "edit_at": "2022-02-01 12:00:00",
+  },
+  {
+    "id": 2,
+    "create_user_id": 3,
+    "name": "React.js勉強会",
+    "technologies": [
+      "React.js",
+      "フロントエンド",
+    ],
+    "start_time": "2022-02-05 13:00:00",
+    "end_time": "2022-02-05 17:00:00",
+    "location": "オンライン",
+    "description": "これは説明です",
+    "limitation": 20,
+    "record_url": "hoge.google.com?hogehogehoge",
+    "created_at": "2022-02-01 10:00:00",
+    "edit_at": "2022-02-01 12:00:00",
+  }
+];
+
+const dummyReserveNum: Num[] = [
+  {
+    "num": 10,
+  },
+  {
+    "num": 15,
+  }
+];
+
+const dummyTech: Technology[] = [
+  {
+    "id": 1,
+    "name": "フロントエンド",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 2,
+    "name": "バックエンド",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  }
+];
+
 export default function Page() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      "id": 1,
-      "create_user_id": 1,
-      "name": "モダンフロント勉強会",
-      "technologies": [
-        "フロントエンド",
-        "Vue.js",
-        "React.js",
-      ],
-      "start_time": "2022-02-02 15:00:00",
-      "end_time": "2022-02-02 17:00:00",
-      "location": "オンライン",
-      "description": "これは説明です",
-      "limitation": 10,
-      "record_url": "hoge.google.com?hogehogehoge",
-      "created_at": "2022-02-01 10:00:00",
-      "edit_at": "2022-02-01 12:00:00",
-    },
-    {
-      "id": 2,
-      "create_user_id": 3,
-      "name": "React.js勉強会",
-      "technologies": [
-        "React.js",
-        "フロントエンド",
-      ],
-      "start_time": "2022-02-05 13:00:00",
-      "end_time": "2022-02-05 17:00:00",
-      "location": "オンライン",
-      "description": "これは説明です",
-      "limitation": 20,
-      "record_url": "hoge.google.com?hogehogehoge",
-      "created_at": "2022-02-01 10:00:00",
-      "edit_at": "2022-02-01 12:00:00",
-    }
-  ]);
+  const { data: session } = useSession();
+  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
 
   // 現在の予約者数を保持するもの
-  const [reserveNum, setReserveNum] = useState<Num[]>([
-    {
-      "num": 10,
-    },
-    {
-      "num": 15,
-    }]);
-    
-  const [tech, setTech] = useState<Technology[]>([
-    {
-      "id": 1,
-      "name": "フロントエンド",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 2,
-      "name": "バックエンド",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    }
-  ]);
+  const [reserveNum, setReserveNum] = useState<Num[]>(dummyReserveNum);
+
+  const [tech, setTech] = useState<Technology[]>(dummyTech);
 
   const router = useRouter();
 
@@ -113,7 +123,7 @@ export default function Page() {
     axios.get("/api/technologies")
       .then((res) => res.data)
       .then((data) => setTech(data))
-      .catch((e)=> null);
+      .catch((e) => null);
 
     tasks.map(async (task: Task) => {
       axios.get(`/api/event/${task.id}`)
@@ -130,7 +140,7 @@ export default function Page() {
     <>
       <div className=".container mt-4 p-4 container-fluid">
         <div className="">
-          <p>usernameさん</p>
+          <p>{isset(session) ? session?.user?.name + "さん" : null}</p>
           <div className="col-9 d-flex justify-content-between">
             <div className="pb-3">
               <h1 className="border-primary border-start border-3 ps-3">イベント一覧</h1>
