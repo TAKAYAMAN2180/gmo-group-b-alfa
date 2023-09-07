@@ -1,14 +1,16 @@
-import * as express from "express"
-import * as bodyParser from "body-parser"
+import express from "express";
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
+import bodyParser from "body-parser"
 
 AppDataSource.initialize().then(async () => {
 
     // create express app
     const app = express()
     app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: true }));
+
 
     // register express routes from defined application routes
     Routes.forEach(route => {

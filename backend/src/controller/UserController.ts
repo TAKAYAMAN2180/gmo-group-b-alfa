@@ -2,9 +2,6 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import { Technology } from "../entity/Technology"
-import { REPLCommand } from "repl"
-import { createQueryBuilder } from "typeorm"
-import App from "next/app"
 
 export class UserController {
 
@@ -27,9 +24,10 @@ export class UserController {
     async createUser(request: Request, response: Response, next: NextFunction) {
         const {name, email, department, technologies} = request.body
         if (!name || !email || !department || technologies.length === 0) {
-            return JSON.stringify({message: "lack data"})
+            return JSON.stringify({message: "lack data" })
         }
 
+        //TODO:awaitしなくていい？？
         let technologyList = []
         technologies.forEach((technology_id) => {
             const technology = this.technologyRepository.findOneBy({
@@ -37,7 +35,7 @@ export class UserController {
             })
             technologyList.push(technology)
         })
-        
+
         const user = new User()
         user.name = name
         user.email = email

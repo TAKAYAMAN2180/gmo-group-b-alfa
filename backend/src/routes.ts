@@ -1,4 +1,5 @@
 import { UserController } from "./controller/UserController"
+import {EventController} from "./controller/EventController";
 
 export const Routes = [{
     method: "get",
@@ -20,7 +21,7 @@ export const Routes = [{
     route: "/api/event",
     controller: EventController,
     action: "createEvent"
-}, {
+}/*, {
     method: "get",
     route: "/api/event",
     controller: EventController,
@@ -40,4 +41,4 @@ export const Routes = [{
     route: "/users/:id",
     controller: EventController,
     action: "deleteEvent"
-}]
+}*/]
