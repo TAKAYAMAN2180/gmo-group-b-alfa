@@ -1,12 +1,9 @@
-import { AppDataSource } from "../data-source"
-import { NextFunction, Request, Response } from "express"
-import { User } from "../entity/User"
-import { Technology } from "../entity/Technology"
-import { REPLCommand } from "repl"
-import { createQueryBuilder } from "typeorm"
-import App from "next/app"
-import { UserTechnology } from "../entity/UserTechnology"
-import { Event } from "../entity/Event"
+import {AppDataSource} from "../data-source"
+import {NextFunction, Request, Response} from "express"
+import {User} from "../entity/User"
+import {Technology} from "../entity/Technology"
+import {UserTechnology} from "../entity/UserTechnology"
+import {Event} from "../entity/Event"
 
 export class TechnologyController {
 
@@ -26,8 +23,11 @@ export class TechnologyController {
 
         const technology = await this.technologyRepository.findOne({
             relations: ['event_technologies', 'event_technologies.technology'],
-            where: { id: technology_id },
-            });
+            where: {id: Number(technology_id)},
+        });
+        if (technology == null) {
+            return response.status(404).send({message: "Not Found"})
+        }
 
         return technology.event_technologies
     }

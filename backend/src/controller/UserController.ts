@@ -2,9 +2,6 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import { Technology } from "../entity/Technology"
-import { REPLCommand } from "repl"
-import { createQueryBuilder } from "typeorm"
-import App from "next/app"
 import { UserTechnology } from "../entity/UserTechnology"
 
 export class UserController {
@@ -23,10 +20,11 @@ export class UserController {
             return response.status(404).send({message: "Not Found"})
         }
 
-        const technologies = new Array()
-        user.user_technologies.forEach((user_tech) => {
+        // TODO: 型の確認
+        const technologies:string[] = []
+        user.user_technologies?.forEach((user_tech) => {
             if(user_tech.technology !== null) {
-                technologies.push(user_tech.technology.name)
+                technologies.push(user_tech.technology!.name)
             }
         })
 
@@ -44,7 +42,14 @@ export class UserController {
     }
 
     async createUser(request: Request, response: Response, next: NextFunction) {
-        const {name, email, department, technologies} = request.body
+        type RequestBodyType = {
+            name: string,
+            email: string,
+            department: string,
+            technologies: number[]
+        }
+
+        const {name, email, department, technologies}:RequestBodyType = request.body
         if (!name || !email || !department || technologies.length === 0) {
             return JSON.stringify({message: "lack data"})
         }
@@ -55,7 +60,7 @@ export class UserController {
         user.department = department
         technologies.forEach(async (technology) => {
             const find_tech = await this.technologyRepository.findOne({
-                where: { id: parseInt(technology) },
+                where: { id: technology },
                 });
 
             const _technology = new Technology()

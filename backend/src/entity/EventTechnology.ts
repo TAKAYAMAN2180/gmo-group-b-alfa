@@ -23,7 +23,7 @@ export class EventTechnology {
         name: 'event_id',
         referencedColumnName: 'id',
     })
-    readonly event?: Event;
+    event?: Event;
 
     @ManyToOne(() => Technology, (technology) => technology.event_technologies, {
         createForeignKeyConstraints: false,
@@ -33,7 +33,7 @@ export class EventTechnology {
         name: 'technology_id',
         referencedColumnName: 'id',
     })
-    readonly technology?: Technology;
+    technology?: Technology;
 
     @CreateDateColumn({ comment: '登録日時' })
     readonly created_at?: Timestamp;

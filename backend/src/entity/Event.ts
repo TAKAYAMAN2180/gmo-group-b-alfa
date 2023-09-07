@@ -24,7 +24,7 @@ export class Event {
         name: 'create_user_id',
         referencedColumnName: 'id',
     })
-    readonly user?: User;
+    user?: User;
 
     @Column('varchar', { length: 256, comment: 'イベント名' })
     name: string;
@@ -72,5 +72,5 @@ export class Event {
         createForeignKeyConstraints: false,
         persistence: false,
     })
-    readonly event_technologies?: EventTechnology[];
+    event_technologies?: EventTechnology[];
 }
