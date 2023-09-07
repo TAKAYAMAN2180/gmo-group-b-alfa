@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 /**
  * 以下のようなプロフィールを作成する
@@ -169,7 +170,7 @@ export default function Page() {
           <br />
           <label className="mb-3 d-flex justify-content-between">
           <div className="mt-4">
-            <a href="/home" className="btn btn-outline-secondary">＜戻る</a>
+            <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
           </div>
           <button  className="btn btn-primary col-10 mt-4" onClick={() => submit()}>更新</button></label>
         </div>

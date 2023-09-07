@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Agreement from "@/components/Agreement";
+import Link from "next/link";
 
 type Event = {
   "create_user": string,
@@ -192,7 +193,7 @@ export default function Page() {
           </div>
           <div className="mb-3 d-flex justify-content-around">
             <div className="mt-4">
-              <a href="/home" className="btn btn-outline-secondary">＜戻る</a>
+              <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
             </div>
             <button className="btn btn-primary col-9 mt-4" type="submit" onClick={() => {
               setIsChecking(true)

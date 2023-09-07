@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Event = {
   "id": number,
@@ -57,7 +58,7 @@ export default function Page() {
       fetchEvent();
       fetchReserveNum();
     }
-  }, []);
+  }, [router]);
 
   const joinEvent = async () => {
     try {
@@ -119,7 +120,7 @@ export default function Page() {
           </div>
         </div>
         <div className="mt-2">
-          <a href="/home" className="btn btn-outline-secondary">＜戻る</a>
+          <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
         </div>
       </div>
     </>
