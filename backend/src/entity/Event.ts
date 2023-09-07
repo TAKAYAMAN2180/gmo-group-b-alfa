@@ -1,6 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, OneToOne, ManyToMany, JoinTable, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, OneToOne, OneToMany, JoinColumn, ManyToOne } from "typeorm"
+import { isConstructorDeclaration } from "typescript"
 import { User } from "./User";
-import { Technology } from "./Technology";
+import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
+import { EventSpeaker } from "./EventSpeaker";
+import { Reservation } from "./Reservation";
+import { EventTechnology } from "./EventTechnology";
 
 @Entity('events')
 export class Event {
@@ -52,7 +56,21 @@ export class Event {
     @UpdateDateColumn({ comment: '更新日時' })
     readonly edit_at?: Timestamp;
 
-    @ManyToMany(() => Technology)
-    @JoinTable()
-    genre?: Technology[]
+    @OneToMany(() => EventSpeaker, (event_speaker) => event_speaker.event, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly event_speakers?: EventSpeaker[];
+
+    @OneToMany(() => Reservation, (reservation) => reservation.event, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly reservations?: Reservation[];
+
+    @OneToMany(() => EventTechnology, (event_technology) => event_technology.event, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly event_technologies?: EventTechnology[];
 }

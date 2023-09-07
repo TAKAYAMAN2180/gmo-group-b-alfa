@@ -1,6 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, OneToMany, ManyToMany, JoinTable } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, OneToMany } from "typeorm"
+import { isConstructorDeclaration } from "typescript"
+import { UserTechnology } from "./UserTechnology";
+import { Reservation } from "./Reservation";
 import { Event } from "./Event";
-import { Technology } from "./Technology";
+import { EventSpeaker } from "./EventSpeaker";
 
 @Entity('users')
 export class User {
@@ -10,7 +13,7 @@ export class User {
         type: 'int',
         comment: 'ユーザーID',
     })
-    readonly id: number;
+    id: number;
 
     @Column('varchar', { length: 256, comment: 'ユーザー名' })
     name: string;
@@ -27,21 +30,28 @@ export class User {
     @UpdateDateColumn({ comment: '更新日時' })
     readonly edit_at?: Timestamp;
 
+    @OneToMany(() => Reservation, (reservation) => reservation.user, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly reservations?: Reservation[];
+
     @OneToMany(() => Event, (event) => event.user, {
         createForeignKeyConstraints: false,
         persistence: false,
     })
     readonly events?: Event[];
 
-    @ManyToMany(() => Event)
-    @JoinTable()
-    reservation?: Event[]
+    @OneToMany(() => EventSpeaker, (event_speaker) => event_speaker.user, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly event_speakers?: EventSpeaker[];
 
-    @ManyToMany(() => Event)
-    @JoinTable()
-    speaker?: Event[]
-
-    @ManyToMany(() => Technology)
-    @JoinTable()
-    can_use?: Technology[]
+    @OneToMany(() => UserTechnology, (user_technology) => user_technology.user, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+        cascade: true
+    })
+    user_technologies?: UserTechnology[];
 }
