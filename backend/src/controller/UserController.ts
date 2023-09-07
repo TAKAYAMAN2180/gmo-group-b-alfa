@@ -2,16 +2,16 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import { Technology } from "../entity/Technology"
-import { REPLCommand } from "repl"
-import { createQueryBuilder } from "typeorm"
-import App from "next/app"
 import { UserTechnology } from "../entity/UserTechnology"
+import { Event } from "../entity/Event"
+import { Reservation } from "../entity/Reservation"
 
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(User)
     private technologyRepository = AppDataSource.getRepository(Technology)
     private userTechnologyRepository = AppDataSource.getRepository(UserTechnology)
+    private eventRepository = AppDataSource.getRepository(Event)
 
     async getProfile(request: Request, response: Response, next: NextFunction) {
         const user_id = parseInt(request.params.id)
@@ -47,7 +47,7 @@ export class UserController {
 
     async createUser(request: Request, response: Response, next: NextFunction) {
         const {name, email, department, technologies} = request.body
-        if (!name || !email || !department || technologies.length === 0) {
+        if (!name || !email || !department) {
             response.status(400).send({message: "Bad Request"})
             return
         }
@@ -60,7 +60,7 @@ export class UserController {
             const find_tech = await this.technologyRepository.findOne({
                 where: { id: technology },
                 });
-            
+
             if(find_tech !== null) {
                 const _technology = new Technology()
                 _technology.id = find_tech.id
@@ -83,7 +83,7 @@ export class UserController {
     async updateProfile(request: Request, response: Response, next: NextFunction) {
         const user_id = parseInt(request.params.id)
         const {name, email, department, technologies} = request.body
-        if (!name || !email || !department || technologies.length === 0) {
+        if (!name || !email || !department) {
             response.status(400).send({message: "Bad Request"})
             return
         }
@@ -111,9 +111,9 @@ export class UserController {
         user.email = email
         user.department = department
         user.user_technologies = new Array()
-        technologies.forEach(async (technology) => {
+        technologies.forEach(async (technology: number) => {
             const find_tech = await this.technologyRepository.findOne({
-                where: { id: parseInt(technology) },
+                where: { id: technology },
                 });
             
             if(find_tech !== null) {
@@ -133,6 +133,46 @@ export class UserController {
         this.userRepository.save(user)
 
         response.status(200).send(user)
+        return
+    }
+
+    async getUserApplyingEvent(request: Request, response: Response, next: NextFunction) {
+        const event_id = parseInt(request.params.id)
+        const event = await this.eventRepository.findOne({
+            relations: ['reservations', 'reservations.user'],
+            where: { id: event_id },
+            });
+
+        if(event === null) {
+            response.status(404).send({message: "NotFound"})
+            return
+        }
+
+        const reservation_users: User[] = []
+        if(event.reservations !== undefined) {
+            event.reservations.forEach((reservation: Reservation) => {
+                if(reservation.user !== undefined) {
+                    reservation_users.push(reservation.user)
+                }
+            })
+        }
+
+        const res = {
+            id: event.id,
+            name: event.name,
+            users: reservation_users,
+            start_time: event.start_time,
+            end_time: event.end_time,
+            location: event.location,
+            description: event.description,
+            limitation: event.limitation,
+            record_url: event.record_url,
+            google_calender_event_id: event.google_calender_event_id,
+            created_at: event.created_at,
+            edit_at: event.edit_at
+        }
+
+        response.status(200).send(res)
         return
     }
 }

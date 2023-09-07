@@ -1,8 +1,9 @@
 import { UserController } from "./controller/UserController"
-import {EventController} from "./controller/EventController";
+import { TechnologyController } from "./controller/TechnologyController"
+import { EventController } from "./controller/EventController"
 
 export const Routes = [{
-    method: "get",
+    method: "post",
     route: "/api/user",
     controller: UserController,
     action: "createUser"
@@ -17,28 +18,28 @@ export const Routes = [{
     controller: UserController,
     action: "updateProfile"
 }, {
+    method: "get",
+    route: "/api/user/event/:id",
+    controller: UserController,
+    action: "getUserApplyingEvent"
+}, {
+    method: "get",
+    route: "/api/tag",
+    controller: TechnologyController,
+    action: "getTagList"
+}, {
+    method: "get",
+    route: "/api/event/:id/remaining",
+    controller: EventController,
+    action: "getRemainingSlotsByEvent"
+}, {
+    method: "get",
+    route: "/api/event/tag/:id",
+    controller: EventController,
+    action: "getEventListByTag"
+},{
     method: "post",
-    route: "/api/event",
+    route: "/api/event/:event_id/apply/:user_id",
     controller: EventController,
-    action: "createEvent"
-}/*, {
-    method: "get",
-    route: "/api/event",
-    controller: EventController,
-    action: "getEventList"
-}, {
-    method: "get",
-    route: "/api/event/:id",
-    controller: EventController,
-    action: "getEventDetail"
-}, {
-    method: "patch",
-    route: "/api/event/:id",
-    controller: EventController,
-    action: "updateEvent"
-}, {
-    method: "delete",
-    route: "/users/:id",
-    controller: EventController,
-    action: "deleteEvent"
-}*/]
+    action: "applyEvent"
+}]

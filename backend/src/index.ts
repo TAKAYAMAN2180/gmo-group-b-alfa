@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
 import bodyParser from "body-parser"
+import { Technology } from "./entity/Technology";
 
 AppDataSource.initialize().then(async () => {
 
@@ -32,13 +33,11 @@ AppDataSource.initialize().then(async () => {
     app.listen(40000)
 
     // insert new users for test
-    // await AppDataSource.manager.save(
-    //     AppDataSource.manager.create(User, {
-    //         firstName: "Timber",
-    //         lastName: "Saw",
-    //         age: 27
-    //     })
-    // )
+    await AppDataSource.manager.save(
+        AppDataSource.manager.create(Technology, {
+            name: "hoge"
+        })
+    )
 
     // await AppDataSource.manager.save(
     //     AppDataSource.manager.create(User, {
@@ -48,6 +47,6 @@ AppDataSource.initialize().then(async () => {
     //     })
     // )
 
-    console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results")
+    console.log("Express server has started on port 40000.")
 
 }).catch(error => console.log(error))
