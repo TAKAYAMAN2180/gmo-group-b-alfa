@@ -139,6 +139,12 @@ const dummyTech: Technology[] = [
       "created_at": "2020-10-10 10:00:00",
       "edited_at": "2020-11-11 11:00:00",
     },
+    {
+      "id": 6,
+      "name": "Python",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
 ];
 
 export default function Page() {
@@ -180,13 +186,37 @@ export default function Page() {
       if (!task.technologies.includes(tech[index].name)) {
         setHiddenTasks((prevState) => {
           const newState = [...prevState];
-          newState[tasks.indexOf(task)] = !newState[tasks.indexOf(task)];
+          const box: any = document.getElementById(tech[index].name);
+          if (box.checked) {
+            newState[tasks.indexOf(task)] = true;
+          } else {
+            newState[tasks.indexOf(task)] = !newState[tasks.indexOf(task)];
+          }
           return newState;
         });
-
       }
     });
   }
+
+  const handleTechCheck2 = () => {
+    setHiddenTasks((prevState) => {
+      const newState = [...prevState];
+      tasks.map((task: Task) => {
+        newState[tasks.indexOf(task)] = false;
+      });
+      tech.map((tech: Technology) => {
+        const box: any = document.getElementById(tech.name);
+        tasks.map((task: Task) => {
+          if (box.checked && !(task.technologies.includes(tech.name))) {
+            newState[tasks.indexOf(task)] = true;
+          }
+        });
+      });
+      console.log(newState);
+        return newState;
+    });
+  }
+  
 
   const details = async (id: number) => {
     router.push(`/event/${id}`);
@@ -223,12 +253,13 @@ export default function Page() {
             <div className="border border-secondary rounded">
               <h3 className="border-bottom border-secondary p-3">フィルター</h3>
               <div className="m-2">
-                <input type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />
+                <input className="mb-1 border border-info rounded w-75" type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />
                 {tech.map((tech: any) => {
                   if (tech.name.indexOf(inputTech) === -1) return null
                   return (
-                    <div key={tech.id}>
-                      <label><input type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} />{tech.name}</label>
+                    <div className="d-flex btn btn-outline-info w-75 rounded" key={tech.id}>
+                      {/* <label><input id={tech.name} className="form-check-input" type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} /> {tech.name}</label> */}
+                      <label><input id={tech.name} className="form-check-input" type="checkbox" onChange={() => handleTechCheck2()} /> {tech.name}</label>
                     </div>
                   )
                 }
