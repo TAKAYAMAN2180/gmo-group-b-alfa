@@ -76,7 +76,24 @@ const dummyTasks: Task[] = [
     "record_url": "hoge.google.com?hogehogehoge",
     "created_at": "2022-02-01 10:00:00",
     "edit_at": "2022-02-01 12:00:00",
-  }
+  },
+  {
+    "id": 3,
+    "create_user_id": 5,
+    "name": "Next.js勉強会",
+    "technologies": [
+      "Next.js",
+      "バックエンド",
+    ],
+    "start_time": "2022-02-05 13:00:00",
+    "end_time": "2022-02-05 17:00:00",
+    "location": "オンライン",
+    "description": "これは説明です",
+    "limitation": 20,
+    "record_url": "hoge.google.com?hogehogehoge",
+    "created_at": "2022-02-01 10:00:00",
+    "edit_at": "2022-02-01 12:00:00",
+  },
 ];
 
 const dummyReserveNum: Num[] = [
@@ -85,22 +102,43 @@ const dummyReserveNum: Num[] = [
   },
   {
     "num": 15,
+  },
+  {
+    "num": 5,
   }
 ];
 
 const dummyTech: Technology[] = [
-  {
-    "id": 1,
-    "name": "フロントエンド",
-    "created_at": "2020-10-10 10:00:00",
-    "edited_at": "2020-11-11 11:00:00",
-  },
-  {
-    "id": 2,
-    "name": "バックエンド",
-    "created_at": "2020-10-10 10:00:00",
-    "edited_at": "2020-11-11 11:00:00",
-  }
+      {
+      "id": 1,
+      "name": "フロントエンド",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
+    {
+      "id": 2,
+      "name": "バックエンド",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
+    {
+      "id": 3,
+      "name": "Vue.js",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
+    {
+      "id": 4,
+      "name": "React.js",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
+    {
+      "id": 5,
+      "name": "Next.js",
+      "created_at": "2020-10-10 10:00:00",
+      "edited_at": "2020-11-11 11:00:00",
+    },
 ];
 
 export default function Page() {
@@ -113,6 +151,10 @@ export default function Page() {
   const [tech, setTech] = useState<Technology[]>(dummyTech);
 
   const router = useRouter();
+  const [inputTech, setInputTech] = useState<string>("");
+  const [hiddenTasks, setHiddenTasks] = useState<boolean[]>(
+    new Array<boolean>(tasks.length).fill(false)
+  );
 
   useEffect(() => {
     axios.get("/api/tasks")
@@ -133,6 +175,19 @@ export default function Page() {
     });
   }, [tasks]);
 
+  const handleTechCheck = (index: number) => {
+    tasks.map((task: Task) => {
+      if (!task.technologies.includes(tech[index].name)) {
+        setHiddenTasks((prevState) => {
+          const newState = [...prevState];
+          newState[tasks.indexOf(task)] = !newState[tasks.indexOf(task)];
+          return newState;
+        });
+
+      }
+    });
+  }
+
   const details = async (id: number) => {
     router.push(`/event/${id}`);
   }
@@ -149,10 +204,11 @@ export default function Page() {
           </div>
         </div>
         <div className="row justify-content-around">
-          <div className="row gy-2 col-9">
-            {tasks.map((task: any, index: number) =>
-              <div key={index} className="btn btn-outline-primary d-flex justify-content-around" onClick={() => details(task.id)}>
-                <div className="col-9 pe-2">
+          <div className="mt-2 col-9">
+            {tasks.map((task: any, index: number) => {
+              if (hiddenTasks[index]) return null
+              return <div key={index} className="mb-2 btn btn-outline-primary d-flex justify-content-around" onClick={() => details(task.id)}>
+                <div className="col-9">
                   <h1>{task.name}</h1>
                   <h2>{task.start_time}</h2>
                 </div>
@@ -161,14 +217,21 @@ export default function Page() {
                   <h5>場所  {task.location}</h5>
                 </div>
               </div>
-            )}
+            })}
           </div>
           <div className="row gy-2 col-3">
             <div className="border border-secondary rounded">
               <h3 className="border-bottom border-secondary p-3">フィルター</h3>
               <div className="m-2">
-                {tech.map((tech: any) =>
-                  <p className="mb-1" key={tech.id}>{tech.name}</p>
+                <input type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />
+                {tech.map((tech: any) => {
+                  if (tech.name.indexOf(inputTech) === -1) return null
+                  return (
+                    <div key={tech.id}>
+                      <label><input type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} />{tech.name}</label>
+                    </div>
+                  )
+                }
                 )}
               </div>
             </div>
