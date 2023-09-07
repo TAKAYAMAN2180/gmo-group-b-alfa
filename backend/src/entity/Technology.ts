@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, ManyToMany, JoinTable, OneToMany, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Timestamp, OneToOne, OneToMany, JoinColumn } from "typeorm"
+import { isConstructorDeclaration } from "typescript"
+import { User } from "./User";
+import { JoinAttribute } from "typeorm/query-builder/JoinAttribute";
+import { UserTechnology } from "./UserTechnology";
+import { EventTechnology } from "./EventTechnology";
 
 @Entity('technologies')
 export class Technology {
@@ -8,7 +13,7 @@ export class Technology {
         type: 'int',
         comment: '技術ID',
     })
-    readonly id: number;
+    id: number;
 
     @Column('varchar', { length: 256, comment: '技術名' })
     name: string;
@@ -18,4 +23,16 @@ export class Technology {
 
     @UpdateDateColumn({ comment: '更新日時' })
     readonly edit_at?: Timestamp;
+
+    @OneToMany(() => EventTechnology, (event_technology) => event_technology.technology, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly event_technologies?: EventTechnology[];
+
+    @OneToMany(() => UserTechnology, (user_technology) => user_technology.technology, {
+        createForeignKeyConstraints: false,
+        persistence: false,
+    })
+    readonly user_technologies?: UserTechnology[];
 }
