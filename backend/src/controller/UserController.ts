@@ -5,23 +5,42 @@ import { Technology } from "../entity/Technology"
 import { REPLCommand } from "repl"
 import { createQueryBuilder } from "typeorm"
 import App from "next/app"
+import { UserTechnology } from "../entity/UserTechnology"
 
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(User)
     private technologyRepository = AppDataSource.getRepository(Technology)
+    private userTechnologyRepository = AppDataSource.getRepository(UserTechnology)
 
     async getProfile(request: Request, response: Response, next: NextFunction) {
         const user_id = parseInt(request.params.id)
-
-        const user = this.userRepository.findOneBy({
-            id: user_id
-        })
+        const user = await this.userRepository.findOne({
+            relations: ['user_technologies', 'user_technologies.technology'],
+            where: { id: user_id },
+            });
         if(!user) {
-            return "not found"
+            return response.status(404).send({message: "Not Found"})
         }
 
-        return user
+        const technologies = new Array()
+        user.user_technologies.forEach((user_tech) => {
+            if(user_tech.technology !== null) {
+                technologies.push(user_tech.technology.name)
+            }
+        })
+
+        const res = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            technologies: technologies,
+            created_at: user.created_at,
+            edit_at: user.edit_at
+        }
+
+        return response.status(200).send(res)
+        
     }
 
     async createUser(request: Request, response: Response, next: NextFunction) {
@@ -30,50 +49,74 @@ export class UserController {
             return JSON.stringify({message: "lack data"})
         }
 
-        let technologyList = []
-        technologies.forEach((technology_id) => {
-            const technology = this.technologyRepository.findOneBy({
-                id: technology_id
-            })
-            technologyList.push(technology)
-        })
-        
         const user = new User()
         user.name = name
         user.email = email
         user.department = department
-        user.can_use = technologyList
+        technologies.forEach(async (technology) => {
+            const find_tech = await this.technologyRepository.findOne({
+                where: { id: parseInt(technology) },
+                });
+
+            const _technology = new Technology()
+            _technology.id = find_tech.id
+            _technology.name = find_tech.name
+
+            const user_tech = new UserTechnology()
+            user_tech.user = user
+            user_tech.technology = _technology
+
+            this.userTechnologyRepository.save(user_tech)
+        })
         
-        return AppDataSource.manager.save(user)
+        this.userRepository.save(user)
+        return "success"
     }
     
     async updateProfile(request: Request, response: Response, next: NextFunction) {
         const user_id = parseInt(request.params.id)
-        const {name, email, department, technologies} = request.params
+        const {name, email, department, technologies} = request.body
         if (!name) return JSON.stringify({message: "name"})
         if (!email) return JSON.stringify({message: "email"})
         if (!department) return JSON.stringify({message: "department"})
         if (technologies.length === 0) return JSON.stringify({message: "technologies"})
 
-        let technologyList = []
-        technologies.forEach((technology_id) => {
-            const technology = this.technologyRepository.findOneBy({
-                id: technology_id
-            })
-            technologyList.push(technology)
+        const user: User = await this.userRepository.findOne({
+            relations: ['user_technologies', 'user_technologies.technology'],
+            where: { id: user_id },
+            });
+
+        user.user_technologies.forEach(async (user_tech) => {
+            await AppDataSource
+                .createQueryBuilder()
+                .delete()
+                .from(UserTechnology)
+                .where("id = :id", { id: user_tech.id })
+                .execute()
         })
 
-        const user = new User()
         user.name = name
         user.email = email
         user.department = department
-        user.can_use = technologyList
+        user.user_technologies = new Array()
+        technologies.forEach(async (technology) => {
+            const find_tech = await this.technologyRepository.findOne({
+                where: { id: parseInt(technology) },
+                });
+            
+            const _technology = new Technology()
+            _technology.id = find_tech.id
+            _technology.name = find_tech.name
 
-        return await AppDataSource
-            .createQueryBuilder()
-            .update(User)
-            .set(user)
-            .where("id = :id", { id: user_id })
-            .execute()
+            const user_tech = new UserTechnology()
+            user_tech.user = user
+            user_tech.technology = _technology
+
+            this.userTechnologyRepository.save(user_tech)
+            user.user_technologies.push(user_tech)
+        })
+
+        this.userRepository.save(user)
+        return "success"
     }
 }
