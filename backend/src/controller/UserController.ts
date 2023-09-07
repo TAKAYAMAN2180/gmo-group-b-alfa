@@ -56,9 +56,9 @@ export class UserController {
         user.name = name
         user.email = email
         user.department = department
-        technologies.forEach(async (technology: number) => {
+        technologies.forEach(async (technology) => {
             const find_tech = await this.technologyRepository.findOne({
-                where: { id: technology },
+                where: { id: parseInt(technology) },
                 });
 
             if(find_tech !== null) {
