@@ -204,10 +204,10 @@ export default function Page() {
           </div>
         </div>
         <div className="row justify-content-around">
-          <div className="row gy-2 col-9">
+          <div className="mt-2 col-9">
             {tasks.map((task: any, index: number) => {
               if (hiddenTasks[index]) return null
-              return <div key={index} className="btn btn-outline-primary d-flex justify-content-around" onClick={() => details(task.id)}>
+              return <div key={index} className="mb-2 btn btn-outline-primary d-flex justify-content-around" onClick={() => details(task.id)}>
                 <div className="col-9">
                   <h1>{task.name}</h1>
                   <h2>{task.start_time}</h2>
@@ -227,10 +227,9 @@ export default function Page() {
                 {tech.map((tech: any) => {
                   if (tech.name.indexOf(inputTech) === -1) return null
                   return (
-                    <>
-                      <p key={tech.id}># {tech.name}</p>
-                      <input type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} />
-                    </>
+                    <div key={tech.id}>
+                      <label><input type="checkbox" onChange={() => handleTechCheck(tech.id - 1)} />{tech.name}</label>
+                    </div>
                   )
                 }
                 )}
